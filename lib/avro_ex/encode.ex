@@ -25,9 +25,12 @@ defmodule AvroEx.Encode do
   def do_encode(%Primitive{type: :float}, %Context{}, float) when is_float(float), do: <<float::little-float-size(32)>>
   def do_encode(%Primitive{type: :double}, %Context{}, double) when is_float(double), do: <<double::little-float-size(64)>>
   def do_encode(%Primitive{type: :long, metadata: %{"logicalType" => "timestamp-nanos"}} = schema, %Context{}, %DateTime{} = dt) do
+    IO.inspect(dt, label: "datetime here")
     dt
     |> DateTime.to_unix(:nanosecond)
+    |> IO.inspect(label: "after to unix call")
     |> encode_integer(schema)
+    |> IO.inspect(label: "after encode integer call")
   end
   def do_encode(%Primitive{type: :long, metadata: %{"logicalType" => "timestamp-micros"}} = schema, %Context{}, %DateTime{} = dt) do
     dt
